@@ -9,7 +9,49 @@ LLM 기반 Threat Intelligence 시스템을 연구·구축하기 위한
 v1~v6 전체 아키텍처 로드맵을 정의한다.
 
 본 버전(v1.5)은 기존 문서 대비 **AI 세팅·학습·추론·데이터 구성·최적화 전략을 전체 포함한 Full Version**이다.
+또한 현재 버전은 v1이다.
+---
+## 디렉토리리
+```
+openedr_v1/
+│
+├── tools/                 # 외부 도구(Chainsaw, Sigma, Osquery, YARA 등)
+│   ├── chainsaw/
+│   ├── sigma/
+│   ├── osquery/
+│   └── yara/
+│
+├── collectors/            # WinRM·SSH 기반 원격 수집 스크립트 (v1~v2 핵심)
+│   ├── windows/
+│   └── linux/             # (필요하면)
+│
+├── pipelines/             # v2~v3 자동화 파이프라인 엔진
+│   ├── collect/
+│   ├── merge/
+│   └── analyze/
+│
+├── evidence/              # 수집된 JSON, EVTX, 로그 (절대 깃추적 X)
+│   ├── raw/
+│   └── processed/
+│
+├── rules/                 # Sigma/YARA 커스텀 룰 (연구 자산)
+│   ├── sigma/
+│   └── yara/
+│
+├── models/                # LLM 관련 데이터 (v3~v6)
+│   ├── datasets/
+│   ├── adapters/
+│   └── configs/
+│
+├── scripts/               # 실험 스크립트 / 툴 자동화 샘플
+│
+├── config/                # YAML/INI 설정들 (hosts, winrm.conf 등)
+│
+├── docs/                  # 문서 (아키텍처, 실험 로그, PDF)
+│
+└── tests/                 # 유닛테스트 / 통합 테스트 (나중 v2~v3)
 
+```
 ---
 
 # 0. System Environment Overview
