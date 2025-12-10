@@ -1,22 +1,6 @@
 # 버전관리
 
-향후 방향
-### 1.0.x
-- evtx 압축 풀기 
-- chainsaw + sigma로 분석
-- json 파일 저장
-
-### v1.1
-- Osquery 추가
-
-### v1.2
-- yara 추가
-
-### v1.3
-- 학습되지 않은 LLM으로 수동요청 보고서
-
----
-Main
+#Main
 
 ## 1.0.2
   > - 25-12-10 17:43
@@ -63,8 +47,24 @@ Add-LocalGroupMember -Group "Administrators" -Member "edradmin"
   /usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from this module in 48.0.0.
     arc4 = algorithms.ARC4(self._key)
   hostname: DESKTOP-0N915IG
+
   
   whoami: desktop-0n915ig\edradmin
   
   [+] WinRM 연결 성공!
   ```
+# 향후 방향
+## 1.0.x
+- evtx 압축 풀기 
+- chainsaw + sigma로 분석
+- json 파일 저장
+
+## v1.1
+- Osquery 추가
+
+## v1.2
+- yara 추가
+
+## v1.3
+- 학습되지 않은 LLM으로 수동요청 보고서
+
