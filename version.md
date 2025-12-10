@@ -3,6 +3,11 @@
 ## 1.0.2
   > - 25-12-10 17:43
   > - f6749a5
+- evidence/raw 폴더 Git 추적 제외 처리 (.gitignore 추가)
+- WinRM 기반 ZIP 다운로드 시 Windows 경로 전체가 파일명으로 저장되던 문제 수정
+  - zip_path에서 파일명 추출 시 Windows 경로 구분자(\) → (/ )로 변환하여 basename 처리
+- ZIP 다운로드 안정성 개선
+- Mini-EDR v1 파이프라인 구조 정리 및 준비 완료
 
 ## 1.0.1
   > - 25-12-10 16:09
