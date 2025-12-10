@@ -2,10 +2,12 @@
 import winrm
 import getpass
 import sys
-import textwrap
+import os
+import base64
 
 # ------------------------------
 # PowerShell Script Template
+# (EVTX Export + ZIP 생성)
 # ------------------------------
 PS_SCRIPT = r'''
 $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
@@ -31,12 +33,60 @@ Write-Output "ZIP_CREATED:$zipPath"
 '''
 
 # ------------------------------
+# Base64 변환 PS Script
+# ------------------------------
+def build_b64_script(zip_path):
+    return fr"""
+[Convert]::ToBase64String([IO.File]::ReadAllBytes('{zip_path}'))
+"""
+
+# ------------------------------
+# Kali evidence 폴더 준비
+# ------------------------------
+def prepare_kali_folder():
+    base_dir = os.path.expanduser("~/openedr_v1/evidence")
+    raw_dir = os.path.join(base_dir, "raw")
+
+    if not os.path.isdir(base_dir):
+        os.makedirs(base_dir, exist_ok=True)
+
+    if not os.path.isdir(raw_dir):
+        os.makedirs(raw_dir, exist_ok=True)
+
+    return raw_dir
+
+# ------------------------------
+# ZIP 파일 다운로드(Base64→파일)
+# ------------------------------
+def download_zip(session, zip_path, save_dir):
+    print(f"\n[+] ZIP Base64 전송 요청...\n   → {zip_path}")
+
+    b64_script = build_b64_script(zip_path)
+    result = session.run_ps(b64_script)
+
+    if result.status_code != 0:
+        print(result.std_err.decode())
+        raise Exception("[-] ZIP Base64 변환 실패")
+
+    b64_data = result.std_out.decode().strip()
+
+    # 로컬 저장 경로
+    file_name = os.path.basename(zip_path)
+    local_path = os.path.join(save_dir, file_name)
+
+    with open(local_path, "wb") as f:
+        f.write(base64.b64decode(b64_data))
+
+    print(f"[+] ZIP 다운로드 완료 → {local_path}")
+    return local_path
+
+# ------------------------------
 # Main Logic
 # ------------------------------
 def main():
-    print("\n===== 원격 EVTX 수집기 (WinRM) =====\n")
+    print("\n===== 원격 EVTX 수집 및 ZIP 다운로드기 (WinRM) =====\n")
 
-    target = input("Target IP: ").strip()
+    target_ip = input("Target IP: ").strip()
     username = input("Username: ").strip()
     password = getpass.getpass("Password: ").strip()
 
@@ -44,7 +94,7 @@ def main():
 
     try:
         session = winrm.Session(
-            target,
+            f"http://{target_ip}:5985/wsman",
             auth=(username, password),
             transport='ntlm',
             server_cert_validation='ignore'
@@ -55,13 +105,13 @@ def main():
 
     print("[+] PowerShell 명령 실행 중...\n")
 
+    # ---------- EVTX Export + ZIP 생성 ----------
     try:
         result = session.run_ps(PS_SCRIPT)
     except Exception as e:
         print(f"[!] PowerShell 실행 실패: {e}")
         sys.exit(1)
 
-    # 결과 확인
     output = result.std_out.decode(errors="ignore").strip()
     error = result.std_err.decode(errors="ignore").strip()
 
@@ -78,12 +128,25 @@ def main():
     print("\n===== 결과 =====")
     print(output)
 
-    if zip_path:
-        print(f"\n[+] ZIP 파일 생성됨: {zip_path}")
-    else:
-        print("\n[!] ZIP 경로를 찾지 못했습니다. 출력 로그를 확인하세요.")
+    if not zip_path:
+        print("\n[!] ZIP 경로 추출 실패: 출력 로그를 확인하세요.")
+        sys.exit(1)
 
-    print("\n[+] 원격 EVTX 수집 완료!\n")
+    print(f"\n[+] 원격 ZIP 생성됨 → {zip_path}")
+
+    # ---------- Kali evidence 폴더 준비 ----------
+    save_dir = prepare_kali_folder()
+    print(f"[+] Evidence 저장 폴더: {save_dir}")
+
+    # ---------- ZIP 다운로드 ----------
+    try:
+        local_saved_path = download_zip(session, zip_path, save_dir)
+    except Exception as e:
+        print(f"[!] ZIP 다운로드 실패: {e}")
+        sys.exit(1)
+
+    print("\n[+] 원격 EVTX 수집 + ZIP 다운로드 완료!")
+    print(f"[+] 로컬 저장 경로: {local_saved_path}\n")
 
 
 if __name__ == "__main__":
