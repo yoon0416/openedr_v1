@@ -20,7 +20,8 @@
   > https://github.com/osquery/osquery
 - velociraptor
   > https://github.com/Velocidex/velociraptor
-
+- MISP
+  > https://github.com/MISP/MISP
 ---
 
 ## 디렉토리
