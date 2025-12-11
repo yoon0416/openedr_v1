@@ -4,7 +4,7 @@
 > Current Architecture Version: v2  <br>
 > Current file timestamps: UTC-5 (EST)
 
-## **중요 라이선스 고지**
+### **중요 라이선스 고지**
 > ODEA Krino 프레임워크의 소스 코드는 **AGPL-3.0** 라이선스를 따릅니다. <br>
 > 그러나 **AI 모델 학습 데이터셋, 설정 파일, 파인튜닝 산출물,
 > 모델 가중치(Weights)**는 디지털 포렌식 및 EDR R&D 과정에서 생성된
