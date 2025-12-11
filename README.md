@@ -1,18 +1,28 @@
-# openedr_v1
+# Syntagma y
+> 프로젝트 기간 : 25-12-10 ~ ing
 ---
 # AI-Driven EDR Research Project (Full Architecture v1.5)
 ### Open-Source EDR + DFIR + LLM Threat Intelligence System
 > 현재 레파지토리에 적용된 아키텍처 버전은 v2이다.<br>
 > 현재 파일 time은 UTC-5 (동부 표준시, 미국ㆍ캐나다ㆍ중남미)이다. 추후 패치예정
 
-본 문서는 WinRM 기반 원격 수집, Chainsaw/Sigma 기반 행위 탐지,  
-Osquery 기반 시스템 상태 분석을 중심으로  
-LLM 기반 Threat Intelligence 시스템을 연구·구축하기 위한  
-v1~v6 전체 아키텍처 로드맵을 정의한다.
+본 문서는 WinRM 기반 원격 수집, Chainsaw/Sigma 기반 행위 탐지, Osquery 기반 시스템 상태 분석, velociraptor df를 중심으로  <br> LLM 기반 Threat Intelligence 시스템을 연구·구축하기 위한 v1~v6 전체 아키텍처 로드맵을 정의한다.
 
 본 버전 readme은 기존 문서 대비 **AI 세팅·학습·추론·데이터 구성·최적화 전략을 전체 포함한 Full Version**이다. <br>
 
 ---
+### 해당 프로젝트에서 사용된 오픈소스
+- chainsaw
+  > https://github.com/WithSecureLabs/chainsaw
+- sigma
+  > https://github.com/SigmaHQ/sigma
+- osquery
+  > https://github.com/osquery/osquery
+- velociraptor
+  > https://github.com/Velocidex/velociraptor
+
+---
+
 ## 디렉토리
 ```
 openedr_v1/
