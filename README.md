@@ -12,6 +12,7 @@
 **ODEA Krino**는 WinRM 기반 원격 수집, Chainsaw/Sigma 기반 행위 탐지,  
 Osquery 기반 시스템 텔레메트리, Velociraptor 기반 DFIR 아티팩트 수집을 통합하여  
 **AI 기반 Threat Intelligence 및 DFIR 자동화 연구**를 수행하기 위한 플랫폼이다.
+> 코드의 완성도와 edr+DFIR 직접 구현보단 빠른 결과 도출 및 LLM 학습에 목표를 둔다.
 
 본 README는 **AI 세팅, 데이터 구성, 파이프라인 구조, LLM 통합 전략**을 포함한  
 Full Architecture v1.5 문서이며, v1~v6 전체 로드맵을 정의한다.
