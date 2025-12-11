@@ -2,7 +2,19 @@
 > OPEN-SOURCE • DFIR • EDR • AI  <br>
 > Research Project Period: 2025-12-10 ~ Underway <br>
 > Current Architecture Version: v2  <br>
-> Current file timestamps: UTC-5 (EST) — will be normalized in future patches <br>
+> Current file timestamps: UTC-5 (EST)
+
+> **중요 라이선스 고지**
+> ODEA Krino 프레임워크의 소스 코드는 **AGPL-3.0** 라이선스를 따릅니다.
+> 그러나 **AI 모델 학습 데이터셋, 설정 파일, 파인튜닝 산출물,
+> 모델 가중치(Weights)**는 디지털 포렌식 및 EDR R&D 과정에서 생성된
+> **독점 연구 자산**입니다.
+>
+> 이 자산에 대한 모든 독점적 권리는 **안윤기(Yoon Gi, Ahn)**에게 있으며,  
+> **안윤기가 원할 경우에 한해** 소속 회사로 권리가 이전될 수 있습니다.
+>
+> 해당 자산은 오픈소스가 아니며, 명시적 허가 없이는 사용·복제·수정·배포할 수 없습니다.
+
 
 ---
 
@@ -12,7 +24,7 @@
 **ODEA Krino**는 WinRM 기반 원격 수집, Chainsaw/Sigma 기반 행위 탐지, 
 Osquery 기반 시스템 텔레메트리, Velociraptor 기반 DFIR 아티팩트 수집을 통합하여   <br>
 **AI 기반 Threat Intelligence 및 DFIR 자동화 연구**를 수행하기 위한 플랫폼이다.
-> 코드의 완성도와 edr+DFIR 직접 구현보단 빠른 결과 도출 및 LLM 학습에 목표를 둔다.
+> - 코드의 완성도와 edr+DFIR 직접 구현보단 빠른 결과 도출 및 LLM 학습에 목표를 둔다.
 
 본 README는 **AI 세팅, 데이터 구성, 파이프라인 구조, LLM 통합 전략**을 포함한  
 Full Architecture v1.5 문서이며, v1~v6 전체 로드맵을 정의한다.
