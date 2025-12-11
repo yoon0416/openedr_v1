@@ -5,14 +5,16 @@ import sys
 import base64
 import time
 
-# --------------------------------------------------
-# 1. OSQuery 실행 파일 경로 (Windows 고정)
-# --------------------------------------------------
+
+# ---------------------------------------------------------
+# 1. OSQuery 실행 파일 경로 (Windows)
+# ---------------------------------------------------------
 OSQUERY_PATH = r"C:\Program Files\osquery\osqueryi.exe"
 
-# --------------------------------------------------
-# 2. OSQuery 쿼리 세트
-# --------------------------------------------------
+
+# ---------------------------------------------------------
+# 2. OSQuery 쿼리 목록 (생략 없이 그대로 유지)
+# ---------------------------------------------------------
 OSQUERY_QUERIES = {
     # --- 프로세스 / 네트워크 ---
     "processes": """
@@ -122,20 +124,9 @@ OSQUERY_QUERIES = {
 }
 
 
-# --------------------------------------------------
-# evidence/osquery 폴더 준비
-# --------------------------------------------------
-def prepare_osquery_sweep_folder():
-    base = os.path.expanduser("~/openedr_v1/evidence/osquery")
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    sweep_dir = os.path.join(base, f"sweep_{timestamp}")
-    os.makedirs(sweep_dir, exist_ok=True)
-    return sweep_dir
-
-
-# --------------------------------------------------
-# OSQuery 쿼리 실행 → Base64 응답
-# --------------------------------------------------
+# ---------------------------------------------------------
+# OSQuery 쿼리 실행 → Base64 결과 반환
+# ---------------------------------------------------------
 def run_osquery_query(session, query):
     ps_cmd = f"""
 $Output = & "{OSQUERY_PATH}" --json "{query.strip().replace('"', '\\"')}"
@@ -151,18 +142,19 @@ $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Output)
     return result.std_out.decode().strip()
 
 
-# --------------------------------------------------
-# v2용 run() 함수
-# --------------------------------------------------
-def run(target_ip, username, password):
+# ---------------------------------------------------------
+# v2 통합 구조용 run() 함수
+# ---------------------------------------------------------
+def run(target_ip, username, password, report_root):
     """
-    OSQuery Sweep 실행
-    - WinRM으로 모든 OSQuery 쿼리를 실행
-    - evidence/osquery/<timestamp>/ 에 JSON 저장
-    - return: sweep_dir
+    - WinRM으로 모든 OSQuery 쿼리 실행
+    - 결과 JSON을 report_root/osquery/ 에 저장
+    - 실패한 쿼리는 report_root/misc/osquery_errors.log에 기록
     """
+
     print("\n===== [v2] OSQuery Sweep 시작 =====")
 
+    # WinRM 연결
     try:
         session = winrm.Session(
             f"http://{target_ip}:5985/wsman",
@@ -174,8 +166,13 @@ def run(target_ip, username, password):
         print(f"[!] WinRM 연결 실패: {e}")
         return None
 
-    sweep_dir = prepare_osquery_sweep_folder()
-    print(f"[+] Sweep 결과 저장 폴더: {sweep_dir}\n")
+    # 최종 저장 경로 (report_root/osquery/)
+    osq_dir = os.path.join(report_root, "osquery")
+    os.makedirs(osq_dir, exist_ok=True)
+
+    misc_dir = os.path.join(report_root, "misc")
+    os.makedirs(misc_dir, exist_ok=True)
+    error_log_path = os.path.join(misc_dir, "osquery_errors.log")
 
     success = []
     failed = []
@@ -187,7 +184,9 @@ def run(target_ip, username, password):
         try:
             b64 = run_osquery_query(session, query)
             data = base64.b64decode(b64)
-            out_path = os.path.join(sweep_dir, f"{name}.json")
+
+            # 파일 저장 경로
+            out_path = os.path.join(osq_dir, f"{name}.json")
 
             with open(out_path, "wb") as f:
                 f.write(data)
@@ -199,21 +198,34 @@ def run(target_ip, username, password):
             print(f"    [!] 실패: {e}")
             failed.append(name)
 
+            # 실패 기록 로그 저장
+            with open(error_log_path, "a", encoding="utf-8") as log:
+                log.write(f"[{name}] 실패: {str(e)}\n")
+
     # 요약 출력
     print("\n===== OSQuery Sweep 요약 =====")
     print(f"성공 {len(success)}개 / 실패 {len(failed)}개")
-    print(f"[✓] Sweep 완료 → {sweep_dir}\n")
 
-    return sweep_dir
+    if failed:
+        print(f"[!] 실패 로그 저장됨 → {error_log_path}")
+
+    print(f"[✓] Sweep 완료 → {osq_dir}\n")
+
+    return osq_dir
 
 
-# --------------------------------------------------
-# standalone 실행 모드 유지
-# --------------------------------------------------
+# ---------------------------------------------------------
+# Standalone 실행 모드 (테스트용)
+# ---------------------------------------------------------
 if __name__ == "__main__":
     import getpass
     print("Standalone 실행")
+
     ip = input("Target IP: ").strip()
     user = input("Username: ").strip()
     pw = getpass.getpass("Password: ")
-    run(ip, user, pw)
+
+    test_root = os.path.expanduser("~/openedr_v1/evidence/v2_report/standalone_test")
+    os.makedirs(test_root, exist_ok=True)
+
+    run(ip, user, pw, test_root)

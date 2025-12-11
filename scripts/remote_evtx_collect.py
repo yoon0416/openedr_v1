@@ -6,6 +6,7 @@ import base64
 import zipfile
 import time
 
+
 # ------------------------------
 # PowerShell Script Template
 # ------------------------------
@@ -30,28 +31,17 @@ Compress-Archive -Path "$evtxFolder\*" -DestinationPath $zipPath -Force
 Write-Output "ZIP_CREATED:$zipPath"
 '''
 
-# ------------------------------
-# Helper Functions
-# ------------------------------
 
+# ---------------------------------------------------------
+# ZIP을 Base64로 변환하여 다운로드하는 PowerShell 명령 생성
+# ---------------------------------------------------------
 def build_b64_script(zip_path):
     return fr"[Convert]::ToBase64String([IO.File]::ReadAllBytes('{zip_path}'))"
 
 
-def prepare_kali_folder():
-    base_dir = os.path.expanduser("~/openedr_v1/evidence")
-    raw_dir = os.path.join(base_dir, "raw")
-    os.makedirs(raw_dir, exist_ok=True)
-    return raw_dir
-
-
-def prepare_extract_folder():
-    base_dir = os.path.expanduser("~/openedr_v1/evidence")
-    extract_dir = os.path.join(base_dir, "extracted")
-    os.makedirs(extract_dir, exist_ok=True)
-    return extract_dir
-
-
+# ---------------------------------------------------------
+# ZIP 다운로드 → report_root/evtx/에 저장
+# ---------------------------------------------------------
 def download_zip(session, zip_path, save_dir):
     print(f"[+] ZIP Base64 다운로드 요청: {zip_path}")
 
@@ -71,11 +61,12 @@ def download_zip(session, zip_path, save_dir):
     return local_path
 
 
-def extract_evtx(zip_file_path):
-    extract_root = prepare_extract_folder()
-
+# ---------------------------------------------------------
+# ZIP 압축 해제 → report_root/evtx/<extract_YYYYMMDD_HHMMSS>
+# ---------------------------------------------------------
+def extract_evtx(zip_file_path, evtx_root):
     ts = time.strftime("%Y%m%d_%H%M%S")
-    out_dir = os.path.join(extract_root, f"extract_{ts}")
+    out_dir = os.path.join(evtx_root, f"extract_{ts}")
     os.makedirs(out_dir, exist_ok=True)
 
     print(f"[+] ZIP 압축 해제 위치: {out_dir}")
@@ -83,23 +74,23 @@ def extract_evtx(zip_file_path):
     with zipfile.ZipFile(zip_file_path, 'r') as z:
         z.extractall(out_dir)
 
-    print("[+] 압축 해제 완료!")
+    print("[+] EVTX 압축 해제 완료!")
     return out_dir
 
 
-# ------------------------------
-# v2 메인 실행 함수 (main.py에서 호출)
-# ------------------------------
-def run(target_ip, username, password):
+# ---------------------------------------------------------
+# v2 통합 구조용 run() 함수
+# ---------------------------------------------------------
+def run(target_ip, username, password, report_root):
     """
-    v2 파이프라인용 EVTX 수집 엔진
-    - WinRM으로 EVTX Export + ZIP 생성
-    - ZIP을 Base64로 Kali에 다운로드
-    - 압축 해제
+    v2 파이프라인용 EVTX 수집 엔진 (통합 evidence 폴더 버전)
+    - report_root/evtx/ 아래에 ZIP 다운로드 및 압축 해제
     - 최종적으로 EVTX 폴더 경로 반환
     """
+
     print("\n===== [v2] EVTX 수집 시작 =====")
 
+    # WinRM 연결
     try:
         session = winrm.Session(
             f"http://{target_ip}:5985/wsman",
@@ -111,7 +102,7 @@ def run(target_ip, username, password):
         print(f"[!] WinRM 연결 실패: {e}")
         return None
 
-    # PowerShell 실행 → ZIP 생성
+    # 원격 PowerShell 실행 → ZIP 생성
     result = session.run_ps(PS_SCRIPT)
 
     if result.status_code != 0:
@@ -131,24 +122,35 @@ def run(target_ip, username, password):
 
     print(f"[+] 원격 ZIP 생성됨: {zip_path}")
 
-    # ZIP 다운로드
-    save_dir = prepare_kali_folder()
-    local_zip = download_zip(session, zip_path, save_dir)
+    # ---------------------------------------------------------
+    # 로컬 저장 경로는 report_root/evtx/
+    # ---------------------------------------------------------
+    evtx_save_dir = os.path.join(report_root, "evtx")
+    os.makedirs(evtx_save_dir, exist_ok=True)
 
-    # 압축 해제
-    extracted_dir = extract_evtx(local_zip)
+    local_zip = download_zip(session, zip_path, evtx_save_dir)
+
+    # ---------------------------------------------------------
+    # 압축 해제 → report_root/evtx/extract_xxx
+    # ---------------------------------------------------------
+    extracted_dir = extract_evtx(local_zip, evtx_save_dir)
 
     print(f"[✓] EVTX 수집 완료 → {extracted_dir}")
     return extracted_dir
 
 
-# ------------------------------
-# Standalone 실행 (개별 실습용)
-# ------------------------------
+# ---------------------------------------------------------
+# Standalone 실행 모드
+# ---------------------------------------------------------
 if __name__ == "__main__":
     import getpass
     print("Standalone remote_evtx_collect 실행 모드")
     ip = input("IP: ")
     user = input("Username: ")
     pw = getpass.getpass("Password: ")
-    run(ip, user, pw)
+
+    # Standalone 테스트용 — 통합 폴더 자동 생성
+    test_root = os.path.expanduser("~/openedr_v1/evidence/v2_report/standalone_test")
+    os.makedirs(test_root, exist_ok=True)
+
+    run(ip, user, pw, test_root)
