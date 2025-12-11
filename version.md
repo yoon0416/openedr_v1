@@ -2,6 +2,13 @@
 
 #Main
 
+## 1.0.4
+  > - 25-12-11 10:22
+  > - ee8948f
+- chainsaw+sigma 분석 후 json 저장 성공
+  - scripts/analyze_evtx.py
+- 이그노어 항목 추가
+
 ## 1.0.3
   > - 25-12-11 09:56
   > - beb663a
