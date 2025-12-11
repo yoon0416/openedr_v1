@@ -1,6 +1,6 @@
 # Krino: The ODEA Forensic Intelligence Framework
 > OPEN-SOURCE • DFIR • EDR • AI  <br>
-> Architecture v2 | 2025.12.10 ~
+> Architecture v2 | 2025.12.10 ~ <br>
 > Current file timestamps: UTC-5 (EST)
 
 
