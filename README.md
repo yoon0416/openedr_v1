@@ -46,7 +46,7 @@ v2.2부터 **MISP Threat Intelligence Pipeline**이 포함될 예정이다.
 # 2. Directory Structure
 
 ```
-odea_krino/                     # (추후 Krino로 변경 예정)
+Krino/                     
 │
 ├── tools/                      # Chainsaw, Sigma, Osquery, YARA, Velociraptor 등
 │   ├── chainsaw/
