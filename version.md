@@ -2,6 +2,47 @@
 
 #Main
 
+## 2.1.0
+  > - 2025-12-11 15:51
+  > - a31ebd1
+- Velociraptor Query 기반 포렌식 아티팩트 수집 엔진(v2.1) 추가
+  - 기존 collect 모드 대신 Windows 환경에서도 100% 동작하는 query 모드로 전면 재작성
+  - WinRM 환경에서 안정적으로 실행되며 ZIP 업로드/다운로드 문제 완전 제거
+  - Velociraptor artifact 함수(VQL) 직접 호출 방식으로 JSONL 기반 포렌식 결과 수집
+
+- 수집되는 아티팩트 총 45개 이상 (대규모 포렌식 스택 자동화)
+  - **실행 흔적 계열**
+    - Prefetch, ShimCache, Amcache, JumpLists, LNK Files, RecentDocs
+  - **파일시스템 포렌식**
+    - MFT, USN Journal, RecycleBin
+  - **브라우저 포렌식**
+    - Chrome History/Downloads/Cookies  
+    - Edge History/Downloads/Cookies
+  - **포렌식 이벤트 로그**
+    - EvtxFast, Security, System, Application, PowerShell, RemoteDesktop
+  - **기기/네트워크 흔적**
+    - USBDevices, FirewallLogs, DNSCache, RDPConnections
+  - **시스템/레지스트리**
+    - Autoruns, RunKeys, StartupApproved, InstalledPrograms, Shellbags, SRUM
+  - **기타 시스템 정보**
+    - Processes, Services, Drivers, Netstat, OS Info, Installed Patches
+
+- 결과물 저장 구조 표준화
+  - `~/openedr_v1/evidence/v2_report/<user_YYYYMMDD_HHMM>/velociraptor/*.jsonl`
+  - 각 아티팩트별로 독립 JSONL 파일 생성
+  - v3(자동 보고서 생성)용 데이터 모델의 기반 완성
+
+- 기술적 개선사항
+  - Velociraptor Offline Collector 부재 문제를 query 모드로 해결
+  - WinRM User Token 권한 기반에서도 동작 가능한 아티팩트만 선별
+  - 실패한 아티팩트 자동 로깅 + 성공/실패 분리 출력
+  - main.py 기존 구조 변경 없이 모듈만 교체하여 호환성 유지
+
+- Mini-EDR v2의 핵심 목표 완성
+  - EVTX 기반 행위 탐지 + Sigma
+  - 시스템 상태 기반 OSQuery 스윕
+  - 포렌식 아티팩트 기반 Velociraptor Query
+  - 모든 결과를 하나의 evidence root에 통합 저장
 ## 2.0.1
   > - 2025-12-11 12:54
   > - 2e55260
