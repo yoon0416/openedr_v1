@@ -2,6 +2,34 @@
 
 #Main
 
+## 1.1.0
+  > - 2025-12-10 20:35
+  > - 3eb7ae6
+
+- Windows Osquery 기반 원격 시스템 스윕 기능 추가
+  - WinRM을 이용해 원격 Windows에서 osqueryi.exe 실행
+  - 약 37개 정찰/DFIR 쿼리 자동 실행 후 JSON으로 수집
+  - 결과는 `evidence/osquery/sweep_YYYYMMDD_HHMMSS/` 구조로 저장
+- 수집 항목 예시
+  - 프로세스/소켓/네트워크 세션/리스닝 포트
+  - 서비스·드라이버·커널드라이버
+  - 사용자·그룹·로그온 세션·로그인 사용자
+  - 자동 실행 항목·스케줄러 작업
+  - OS/패치/설치 프로그램/시스템 정보
+  - 디스크·파티션·마운트
+  - 보안 제품 상태(windows_security_products)
+  - Run 키·RDP 관련 레지스트리
+  - DNS·인터페이스 설정
+  - USB 디바이스 / 이력
+  - Chrome 확장/히스토리/쿠키
+  - Prefetch, Shimcache, Amcache, PowerShell 이벤트/스크립트 등 DFIR 테이블
+- Mini-EDR v1 아키텍처 정리
+  - EVTX 기반 탐지(Chainsaw + Sigma)
+  - Osquery 기반 상태/포렌식 스윕
+  - 모든 결과를 JSON으로 표준화하여 후속 LLM 분석 준비
+
+---
+
 ## 1.0.4
   > - 25-12-11 10:22
   > - ee8948f
@@ -67,14 +95,8 @@ Add-LocalGroupMember -Group "Administrators" -Member "edradmin"
   [+] WinRM 연결 성공!
   ```
 # 향후 방향
-## 1.0.x
-- chainsaw + sigma로 분석
-- json 파일 저장
 
-## v1.1
-- Osquery 추가
-
-## v1.2
+## v1.2 (보류)
 - yara 추가
 
 ## v1.3
