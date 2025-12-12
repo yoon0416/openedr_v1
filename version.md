@@ -2,6 +2,7 @@
 
 #Main
 
+## 이슈
 > ## v2.2.1
 > - MISP atturibute 이슈
 > - kali liux(server) 터짐
