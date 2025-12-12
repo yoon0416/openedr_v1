@@ -1,6 +1,6 @@
 # Main version 
 > v2.2.0
-<br>
+> server 1pc, agent 1pc
 
 ---
 
