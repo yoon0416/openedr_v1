@@ -14,7 +14,7 @@
 
 ## 이슈
 > ## v2.2.1
-> - MISP atturibute 이슈
+> - MISP attribute 이슈
 > - kali liux(server) 터짐
 > - 더이상 v2 패치 없이 v2.2.0에서 마무리 후 바로 v3 연구시작
 
