@@ -1,12 +1,16 @@
-# 버전관리
+# Main version 
+> v2.2.0
 
-#Main
+## 3.0.0 예정
+- new vmware kali lilux(server) git clone 및 세팅
+- LLM 세팅 및 오신트 자료 훈련 예정
+- 에이전트 pc에 공격 테스트 예정
+
 
 ## 이슈
 > ## v2.2.1
 > - MISP atturibute 이슈
 > - kali liux(server) 터짐
-> - 새로운 환경에서 git clone 전략
 > - 더이상 v2 패치 없이 v2.2.0에서 마무리 후 바로 v3 연구시작
 
 ## 2.2.0
@@ -181,6 +185,4 @@ Add-LocalGroupMember -Group "Administrators" -Member "edradmin"
 ## v1.2 (보류)
 - yara 추가
 
-## v1.3
-- 학습되지 않은 LLM으로 수동요청 보고서
 
