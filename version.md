@@ -1,16 +1,53 @@
 # Main version 
-> - v2.2.0 
+> - v3.0.0 
 > - server 1pc, agent 1pc
 
 ---
 
 # 릴리즈 노트
 
-## 3.0.0 예정
-- new vmware kali lilux(server) git clone 및 세팅
-- LLM 세팅 및 오신트 자료 훈련 예정
-- 에이전트 pc에 공격 테스트 예정
+## 3.0.0 (Research / Local Only)
 
+- LLM 기반 DFIR 분석 가능성 검증을 위한 v3 연구 단계 진입
+- 대용량 모델 파일로 인해 GitHub 미업로드 (Local 환경 전용 연구)
+
+### Environment
+- New VMware Kali Linux (Server) 환경 구성
+- Git clone 및 기본 파이프라인 세팅 완료
+- Local Windows 11 환경에서 LLM 추론 테스트 수행
+- Base Model: LLaMA 3.1 8B (Base)
+- Framework: HuggingFace Transformers
+- Precision: bfloat16
+- Inference only (Fine-tuning / LoRA 미적용)
+
+### Research Scope
+- LLM 기반 DFIR / OSINT 질의응답 성능 평가
+- 영어 입력/출력과 한국어 입력/출력 성능 비교 실험
+- 자동 보고서(v3 목표) 이전 단계의 기초 추론 능력 검증
+
+### Key Findings
+- 영어 입력/출력 성능이 한국어 대비 명확히 우수함
+- 영어:
+  - 문장 구조 안정
+  - DFIR / 보안 용어 인식 가능
+  - 반복 및 붕괴 현상 제한적
+  - 기초 수준의 실무 QA 가능
+- 한국어:
+  - 심각한 반복(loop) 및 문장 붕괴 발생
+  - 보안 개념 오류 다수
+  - 답변 중단 및 토큰 붕괴 빈번
+  - 현 단계 실무 활용 불가
+
+### Conclusion
+- 본 Base Model은 영어 기준 DFIR 분석 엔진으로 발전 가능성 확인
+- 한국어는 Base Model 기준 학습 데이터 및 토크나이저 한계로 성능 미달
+- v3 단계에서는 영어 DFIR QA 안정화를 우선 목표로 설정
+
+### Next Plan (v3.x)
+- 영어 DFIR 전용 QA 데이터셋 구축
+- 영어 기준 LoRA / QLoRA 파인튜닝 검토
+- 한국어 DFIR는 별도 단계로 분리하여 후순위 연구
+- 영어 분석 결과 → 한국어 요약 구조 검토 (단일 모델 통합 금지)
 
 ## 이슈
 > ## v2.2.1
