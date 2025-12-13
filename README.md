@@ -18,8 +18,7 @@ system telemetry via Osquery,
 and DFIR artifact collection using Velociraptor.
 
 The project is designed to conduct research on  
-**AI-driven Threat Intelligence and DFIR automation**,  
-with a focus on validating end-to-end architecture rather than individual tools.
+**AI-driven Threat Intelligence and DFIR automation**, with a focus on validating end-to-end architecture rather than individual tools.
 
 > The most important aspect of this project is not whether a bottleneck
 > can be fully resolved, but whether the right decision is made to reach
