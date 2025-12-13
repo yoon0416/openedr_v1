@@ -2,7 +2,10 @@
 > OPEN-SOURCE • DFIR • EDR • AI  <br>
 > Stable releases are documented in the GitHub Releases section | 2025.12.10 ~  <br>
 > Current file timestamps: UTC-5 (EST) <br>
-> Initial inference performance evaluation of the v3.0.0 LLM base model is currently in progress. <br>
+> Initial inference performance evaluation of the v3.0.0 LLM base model is currently in progress.  
+All LLM-related source code is being researched and version-controlled in a private repository.  
+The initial base model setup, inference test scripts, configuration details, and directory structure will be published in this repository at a later stage.
+
 
 ---
 
